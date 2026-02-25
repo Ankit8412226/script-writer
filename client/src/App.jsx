@@ -135,8 +135,9 @@ const SceneCard = ({ label, visual, voiceover, onCopy }) => (
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [topic, setTopic] = useState('');
-  const [duration, setDuration] = useState('30 Seconds (Shorts/Reels)');
-  const [style, setStyle] = useState('Dark Comedy');
+  const [format, setFormat] = useState('Short-form Video');
+  const [duration, setDuration] = useState('60 Seconds');
+  const [style, setStyle] = useState('Storytelling');
   const [platform, setPlatform] = useState('TikTok/Reels');
   const [email, setEmail] = useState(() => localStorage.getItem('user_email') || '');
   const [loading, setLoading] = useState(false);
@@ -154,13 +155,29 @@ export default function App() {
     "Finalizing retention loops..."
   ];
 
+  const formats = [
+    { name: 'Short-form Video', icon: Zap, desc: 'TikTok, Reels, Shorts' },
+    { name: 'YouTube Long-form', icon: Video, desc: 'Detailed deep-dives' },
+    { name: 'Full Story', icon: BookOpen, desc: 'Deep narrative arc' },
+    { name: 'Movie Script', icon: Clapperboard, desc: 'Cinematic scene' },
+  ];
+
+  const durations = [
+    '30 Seconds',
+    '60 Seconds',
+    '90 Seconds',
+    '3 Minutes',
+    '5 Minutes+',
+  ];
+
   const styles = [
+    { name: 'Storytelling', desc: 'Narrative arcs', icon: Video },
     { name: 'Dark Comedy', desc: 'Witty and edgy', icon: Theater },
     { name: 'Cinematic', desc: 'Visual storytelling', icon: Clapperboard },
     { name: 'Motivational', desc: 'Inspiring energy', icon: Zap },
     { name: 'Savage', desc: 'Direct and bold', icon: Flame },
     { name: 'Edu-tainment', desc: 'Fun learning', icon: BookOpen },
-    { name: 'Storytelling', desc: 'Narrative arcs', icon: Video },
+    { name: 'Horror/Mystery', desc: 'Dark & Tense', icon: Target },
   ];
 
   const platforms = [
@@ -201,7 +218,7 @@ export default function App() {
       const response = await fetch(`${apiUrl}/api/generate-script`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, style, duration, platform, email })
+        body: JSON.stringify({ topic, style, duration, platform, format, email })
       });
       const data = await response.json();
       if (data.success) {
@@ -380,18 +397,53 @@ export default function App() {
                           )}
                         </div>
 
+                      {/* Format Selection */}
+                      <div className="space-y-3">
+                        <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Content Format</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {formats.map((f) => (
+                            <button
+                              key={f.name}
+                              onClick={() => setFormat(f.name)}
+                              className={`py-3 px-4 rounded-xl border text-[10px] font-bold transition-all flex flex-col gap-1 ${
+                                format === f.name
+                                  ? 'border-primary-blue bg-primary-blue/10 text-white'
+                                  : 'border-dark-border bg-dark-surface/50 text-text-muted hover:border-white/20'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <f.icon className="w-3 h-3" />
+                                {f.name}
+                              </div>
+                              <span className="text-[8px] opacity-50 font-medium">{f.desc}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
                       {/* Duration */}
                       <div className="space-y-3">
-                        <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Target Duration</label>
-                        <button className="w-full h-14 bg-dark-bg/50 border border-dark-border rounded-2xl px-6 flex justify-between items-center text-sm hover:border-primary-blue/30 transition-all">
-                          <span className="text-white">{duration}</span>
-                          <ChevronDown className="w-5 h-5 text-text-muted" />
-                        </button>
+                        <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Length / Duration</label>
+                        <div className="flex flex-wrap gap-2">
+                          {durations.map((d) => (
+                            <button
+                              key={d}
+                              onClick={() => setDuration(d)}
+                              className={`px-4 py-2 rounded-lg border text-[10px] font-bold transition-all ${
+                                duration === d
+                                  ? 'border-primary-blue bg-primary-blue/20 text-white'
+                                  : 'border-dark-border bg-dark-surface/50 text-text-muted hover:border-white/20'
+                              }`}
+                            >
+                              {d}
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                         {/* Platform Selection */}
                         <div className="space-y-3">
-                          <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Target Platform</label>
+                          <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Distribution</label>
                           <div className="flex gap-2">
                             {platforms.map((p) => (
                               <button

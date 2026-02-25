@@ -9,7 +9,7 @@ exports.generateScript = async (req, res) => {
     return errorResponse(res, errors.array()[0].msg, 400, errors.array());
   }
 
-  const { topic, style, duration, platform, email } = req.body;
+  const { topic, style, duration, platform, email, format } = req.body;
 
   try {
     // Check for existing user to manage 3-generation limit
@@ -40,7 +40,7 @@ exports.generateScript = async (req, res) => {
     }
 
     // Generate AI Script
-    const script = await generateAiScript({ topic, style, duration, platform });
+    const script = await generateAiScript({ topic, style, duration, platform, format });
 
     return successResponse(res, script, 'Script generated successfully');
   } catch (error) {

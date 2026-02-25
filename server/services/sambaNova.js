@@ -5,7 +5,7 @@ require('dotenv').config();
  * Generates a viral-ready video script using SambaNova's Llama-3.3-70B model.
  * Uses advanced prompting techniques like Pattern Interrupts and Open Loops.
  */
-const generateAiScript = async ({ topic, style, duration, platform }) => {
+const generateAiScript = async ({ topic, style, duration, platform, format }) => {
   const apiKey = process.env.SAMBANOVA_API_KEY;
   const baseUrl = process.env.SAMBANOVA_BASE_URL || 'https://api.sambanova.ai/v1';
 
@@ -16,16 +16,18 @@ const generateAiScript = async ({ topic, style, duration, platform }) => {
     'Motivational': 'inspirational, high-energy, and persuasive. Use powerful emotional triggers.',
     'Savage': 'bold, unfiltered, and aggressively honest. Use controversial takes to drive engagement.',
     'Storytelling': 'narrative-driven and suspenseful. Follow a clear setup, conflict, and payoff.',
-    'Edu-tainment': 'engaging, educational, and entertaining. Break down complex topics simply.'
+    'Edu-tainment': 'engaging, educational, and entertaining. Break down complex topics simply.',
+    'Horror/Mystery': 'dark, tense, and atmospheric. Use suspense and psychological thrills.'
   };
 
   // Dynamic scene count for massive narrative depth
-  let sceneCount = 5; // Default for 30s
+  let sceneCount = 5;
   if (duration.includes('60s')) sceneCount = 8;
-  if (duration.includes('90s') || style === 'Storytelling') sceneCount = 15; // Massive story mode
+  if (duration.includes('90s') || duration.includes('3 Minutes') || style === 'Storytelling' || format === 'Full Story') sceneCount = 15;
 
   const prompt = `[DIRECTOR'S CUT - UNFILTERED PRODUCTION MODE]
 PROJECT TITLE: "${topic}"
+PROJECT TYPE: ${format || 'Video Script'}
 CREATIVE VIBE: ${style} (${styleContext[style] || 'Raw and authentic'})
 TARGET PLATFORM: ${platform || 'Independent Cinema/Social Media'}
 
