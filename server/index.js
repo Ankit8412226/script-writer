@@ -17,8 +17,10 @@ app.use(morgan('dev'));
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
+  'http://localhost:5000',
   process.env.FRONTEND_URL,
-  'https://script-writer-beige.vercel.app' // Extra safety
+  'https://script-writer-beige.vercel.app',
+  'https://script-writer-dnex.vercel.app'
 ].filter(Boolean);
 
 app.use(cors({
