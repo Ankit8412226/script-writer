@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  generationsUsed: {
+    type: Number,
+    default: 1
+  },
   createdAt: {
     type: Date,
     default: Date.now

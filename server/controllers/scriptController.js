@@ -12,15 +12,32 @@ exports.generateScript = async (req, res) => {
   const { topic, style, duration, platform, email } = req.body;
 
   try {
-    // Save lead/user interaction
-    const newUser = new User({
-      email,
-      topic,
-      style,
-      duration,
-      platform
-    });
-    await newUser.save();
+    // Check for existing user to manage 3-generation limit
+    let user = await User.findOne({ email });
+
+    if (user) {
+      if (user.generationsUsed >= 3) {
+        return errorResponse(res, 'You have reached your limit of 3 free scripts. Upgrade to continue!', 403);
+      }
+      // Update existing user usage
+      user.generationsUsed += 1;
+      user.topic = topic;
+      user.style = style;
+      user.duration = duration;
+      user.platform = platform;
+      await user.save();
+    } else {
+      // Save new lead
+      user = new User({
+        email,
+        topic,
+        style,
+        duration,
+        platform,
+        generationsUsed: 1
+      });
+      await user.save();
+    }
 
     // Generate AI Script
     const script = await generateAiScript({ topic, style, duration, platform });
