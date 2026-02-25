@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-bg: #06080F;
+  --color-dark-surface: #0F121F;
+  --color-dark-border: #1E253A;
+  --color-primary-blue: #3031FF;
+  --color-primary-glow: rgba(48, 49, 255, 0.4);
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #838BA6;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2.5rem;
+}
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-text-main antialiased selection:bg-primary-blue/30;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-24;
+  }
+
+  .figma-card {
+    @apply bg-dark-surface border border-dark-border rounded-3xl p-8 transition-all hover:border-dark-border/80;
+  }
+
+  .glass-tag {
+    @apply px-3 py-1 bg-primary-blue/10 border border-primary-blue/20 rounded-full text-[10px] font-bold text-primary-blue uppercase tracking-widest;
+  }
+
+  .figma-button-primary {
+    @apply bg-primary-blue text-white rounded-2xl py-5 px-8 font-bold flex items-center justify-center gap-3 transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.98] shadow-[0_12px_30px_var(--color-primary-glow)];
+  }
+
+  .nav-item {
+    @apply flex flex-col items-center gap-1.5 text-[10px] uppercase font-bold text-text-muted transition-colors py-2 hover:text-white;
+  }
+
+  .nav-item.active {
+    @apply text-primary-blue;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-border rounded-full hover:bg-text-muted transition-colors;
+}
+
+/* Gradients */
+.bg-mesh {
+  background-image:
+    radial-gradient(at 0% 0%, hsla(243, 100%, 59%, 0.05) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(197, 100%, 49%, 0.05) 0, transparent 50%);
+}
