@@ -13,6 +13,7 @@ import {
   Flame,
   Home,
   LayoutGrid,
+  Library,
   Mail,
   RotateCcw,
   Save,
@@ -159,6 +160,8 @@ export default function App() {
     { name: 'Short-form Video', icon: Zap, desc: 'TikTok, Reels, Shorts' },
     { name: 'YouTube Long-form', icon: Video, desc: 'Detailed deep-dives' },
     { name: 'Full Story', icon: BookOpen, desc: 'Deep narrative arc' },
+    { name: 'Blog Story', icon: FileText, desc: 'Article-style narrative' },
+    { name: 'Series of Stories', icon: Library, desc: 'Multi-part collection' },
     { name: 'Movie Script', icon: Clapperboard, desc: 'Cinematic scene' },
   ];
 
