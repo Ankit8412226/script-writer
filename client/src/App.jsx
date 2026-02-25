@@ -219,14 +219,22 @@ export default function App() {
   };
 
   const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text || JSON.stringify(script));
+    let content = text;
+    if (typeof text === 'object' && text !== null) {
+      content = `${text.visual || ''}\n${text.voiceover || ''}`;
+    }
+    navigator.clipboard.writeText(content || JSON.stringify(script));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const copyAll = () => {
     if (!script) return;
-    const fullText = `TOPIC: ${topic}\nSTYLE: ${style}\nPLATFORM: ${platform}\n\nHOOK:\nVisual: ${script.hook?.visual || 'N/A'}\nVoiceover: ${script.hook?.voiceover || script.hook}\n\nSCENES:\n${script.scenes?.map((s, i) => `Scene ${i+1}:\nVisual: ${s.visual}\nVoiceover: ${s.voiceover}`).join('\n\n')}\n\nCTA: ${script.cta}`;
+    const hookText = typeof script.hook === 'object'
+      ? `Visual: ${script.hook.visual}\nVoiceover: ${script.hook.voiceover}`
+      : `Voiceover: ${script.hook}`;
+
+    const fullText = `TOPIC: ${topic}\nSTYLE: ${style}\nPLATFORM: ${platform}\n\nHOOK:\n${hookText}\n\nSCENES:\n${script.scenes?.map((s, i) => `Scene ${i+1}:\nVisual: ${s.visual}\nVoiceover: ${s.voiceover}`).join('\n\n')}\n\nCTA: ${script.cta}`;
     navigator.clipboard.writeText(fullText);
     setCopyAllStatus('Copied! ✓');
     setTimeout(() => setCopyAllStatus('Copy Full Script'), 2000);

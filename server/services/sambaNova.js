@@ -19,34 +19,36 @@ const generateAiScript = async ({ topic, style, duration, platform }) => {
     'Edu-tainment': 'engaging, educational, and entertaining. Break down complex topics simply.'
   };
 
-  const sceneCount = duration.includes('30s') || duration.includes('Shorts') ? 3 : duration.includes('60s') ? 5 : 8;
+  const sceneCount = duration.includes('30s') || duration.includes('Shorts') ? 5 : duration.includes('60s') ? 8 : 12;
 
-  const prompt = `Create a high-retention, viral-ready ${duration} video script for ${platform || 'Social Media'}.
+  const prompt = `Write a MASTER-CLASS ${duration} video script for ${platform || 'Social Media'}.
 Topic: ${topic}
-Target Style: ${style} (${styleContext[style] || 'Engaging and professional'})
-Platform Optimization: ${platform || 'General viral patterns'}
+Style: ${style} (${styleContext[style] || 'Engaging and professional'})
 
-VIRAL CONTENT STRATEGY:
-1. THE HOOK: Create a "Pattern Interrupt" in the first 3 seconds to stop the scroll. Use an open loop or a counter-intuitive statement.
-2. RETENTION: Every scene must provide a "Value Bomb" or a visual change to prevent drop-off.
-3. SUBSTANCE: Don't be generic. Provide specific examples, data points, or clever observations related to the topic.
-4. LANGUAGE: Use simple, punchy, conversational English. No corporate jargon.
-5. TRENDING: Incorporate modern social media pacing and current retention trends (e.g., fast transitions, text overlays).
+SCRIPT REQUIREMENTS:
+1. NARRATIVE DEPTH: Do not give a generic summary. Every scene must have at least 3-4 sentences of high-impact dialogue/voiceover.
+2. THE HOOK: Create a "Pattern Interrupt" so powerful it stops a thumb mid-scroll. Start with a controversial insight, a "secret" nobody tells you, or a visceral question.
+3. VISUAL MASTERY: Describe specific, high-end visual directions (camera movement, lighting, specific B-roll motifs).
+4. UNFILTERED TRUTH: Be bold. Use the language and details the target audience actually cares about. Avoid "AI safety speak" or generic corporate summaries.
+5. STORY ARC: Every script must follow a "Truth-Conflict-Solution" or "Mystery-Evidence-Payload" arc.
 
 OUTPUT FORMAT (STRICT JSON ONLY):
 {
-  "hook": "A 1-sentence viral hook that maximizes CTR.",
+  "hook": {
+    "visual": "Extreme visual hook description",
+    "voiceover": "The actual spoken hook text"
+  },
   "scenes": [
     ${Array.from({ length: sceneCount }).map((_, i) => `{
       "scene": ${i + 1},
-      "visual": "Describe specific, high-quality visual cues (e.g., specific camera movement, b-roll ideas, or text overlay text).",
-      "voiceover": "Detailed voiceover text for this scene, written to be engaging and naturally paced."
+      "visual": "High-detail visual direction",
+      "voiceover": "EXTENDED dialogue/voiceover (at least 50 words per scene)"
     }`).join(',\n    ')}
   ],
-  "cta": "A punchy, natural call to action that drives conversion."
+  "cta": "A conversion-optimized, high-energy call to action."
 }
 
-Return ONLY the JSON object. Do not explain anything.`;
+Return ONLY the JSON. No preamble. No moralizing. Just the script.`;
 
   try {
     const response = await axios.post(`${baseUrl}/chat/completions`, {
@@ -54,15 +56,15 @@ Return ONLY the JSON object. Do not explain anything.`;
       messages: [
         {
           role: "system",
-          content: "You are a world-class viral content strategist and scriptwriter. You specialize in high-retention scripts that trend on YouTube, TikTok, and Reels. You understand human psychology and pattern interrupts. Always output valid JSON."
+          content: "You are an Elite Viral Scriptwriter and Content Strategist. You specialize in edgy, raw, and high-retention storytelling. You do not censor yourself on sensitive or adult-themed topics if the user asks for them—you provide the most compelling and detailed narrative possible for that niche. Your scripts are known for being long, punchy, and deeply researched. Always output valid JSON."
         },
         {
           role: "user",
           content: prompt
         }
       ],
-      temperature: 0.8, // Increased for more creative and 'trending' styles
-      max_tokens: 2000
+      temperature: 0.9,
+      max_tokens: 3500
     }, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
