@@ -1,15 +1,15 @@
 import { Bell, Clapperboard } from 'lucide-react';
 
-const Navbar = () => {
+const Navbar = ({ onHome }) => {
   return (
     <header className="flex justify-between items-center py-8 lg:py-10">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-primary-blue rounded-xl flex items-center justify-center shadow-lg shadow-primary-blue/20">
+      <div className="flex items-center gap-3 cursor-pointer group" onClick={onHome}>
+        <div className="w-10 h-10 bg-primary-blue rounded-xl flex items-center justify-center shadow-lg shadow-primary-blue/20 group-hover:scale-110 transition-transform">
           <Clapperboard className="w-5 h-5 text-white" />
         </div>
         <div className="flex flex-col">
-          <span className="font-extrabold text-xl tracking-tight leading-none">ScriptForge AI</span>
-          <span className="text-[10px] text-primary-blue font-bold uppercase tracking-[0.2em] mt-1">Creator Suite</span>
+          <span className="font-extrabold text-xl tracking-tight leading-none group-hover:text-primary-blue transition-colors">Forge Cinematic AI</span>
+          <span className="text-[10px] text-primary-blue font-bold uppercase tracking-[0.2em] mt-1">Cinematic Production Suite</span>
         </div>
       </div>
 

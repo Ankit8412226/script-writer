@@ -24,10 +24,11 @@ import { useState } from 'react';
 
 // --- Sub-components ---
 import BottomTabNav from './components/BottomTabNav';
+import Footer from './components/Footer';
 import LandingPage from './components/LandingPage';
-import LoadingState from './components/LoadingState';
 import Modal from './components/Modal';
 import Navbar from './components/Navbar';
+import ProductionForge from './components/ProductionForge';
 import Toast from './components/Toast';
 
 const StyleItem = ({ name, desc, icon: Icon, active, onClick }) => (
@@ -102,6 +103,7 @@ const SceneCard = ({ label, visual, voiceover, onCopy }) => (
 // --- Main App ---
 
 export default function App() {
+  const [view, setView] = useState('landing');
   const [activeTab, setActiveTab] = useState('home');
   const [topic, setTopic] = useState('');
   const [format, setFormat] = useState('Short-form Video');
@@ -245,7 +247,25 @@ export default function App() {
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-        <Navbar />
+        <Navbar onHome={() => setView('landing')} />
+
+        <div className="mt-8 mb-12 flex items-center gap-6 overflow-x-auto no-scrollbar py-2">
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-text-muted">Live Trending topics</span>
+          </div>
+          <div className="flex gap-3">
+            {['Mumbai Street Food', 'AI Workflow 2026', 'Startup Pitch Deck', 'Travel Vlog Hinglish', 'Stock Market India'].map((topic) => (
+              <button
+                key={topic}
+                onClick={() => setTopic(topic)}
+                className="px-4 py-2 rounded-full border border-dark-border bg-dark-surface/30 text-[10px] font-bold text-white/60 hover:border-primary-blue hover:text-white transition-all whitespace-nowrap"
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <AnimatePresence mode="wait">
           {toasts.map(toast => (
@@ -257,130 +277,31 @@ export default function App() {
             />
           ))}
 
-          {!script && !loading ? (
-            <LandingPage
-              topic={topic}
-              setTopic={setTopic}
+          {view === 'landing' && !script && !loading && (
+            <LandingPage onEnterForge={() => setView('forge')} />
+          )}
+
+          {view === 'forge' && !script && !loading && (
+            <ProductionForge
+              topic={topic} setTopic={setTopic}
+              format={format} setFormat={setFormat}
+              duration={duration} setDuration={setDuration}
+              style={style} setStyle={setStyle}
+              platform={platform} setPlatform={setPlatform}
               handleInitialSubmit={handleInitialSubmit}
-            >
-              <div slot="generator-slot" className="lg:sticky lg:top-12">
-                 <div className="bg-[#12162B] border border-dark-border rounded-[2.5rem] p-8 lg:p-10 shadow-2xl relative overflow-hidden group">
-                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary-blue/10 rounded-full blur-[40px] group-hover:bg-primary-blue/20 transition-all"></div>
-                    <div className="flex items-center gap-3 mb-8 text-primary-blue">
-                       <Zap className="w-5 h-5" />
-                       <h2 className="text-lg font-bold text-white">Script Generator</h2>
-                    </div>
+              onBack={() => setView('landing')}
+            />
+          )}
 
-                    <div className="space-y-8">
-                        <div className="space-y-3 relative group/text">
-                          <div className="flex justify-between items-center">
-                            <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Video Topic</label>
-                            <span className={`text-[9px] font-bold ${topic.length > 450 ? 'text-red-400' : 'text-text-muted'}`}>
-                              {topic.length}/500
-                            </span>
-                          </div>
-                          <textarea
-                            value={topic}
-                            onChange={(e) => setTopic(e.target.value.slice(0, 500))}
-                            placeholder="What is your video about? e.g. 'The dark truth about working from home'"
-                            className="w-full h-32 bg-dark-bg/50 border border-dark-border rounded-2xl p-5 text-sm text-white placeholder:text-white/20 outline-none focus:border-primary-blue/60 focus:ring-4 ring-primary-blue/5 transition-all resize-none leading-relaxed"
-                          />
-                        </div>
-
-                      <div className="space-y-3">
-                        <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Content Format</label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {formats.map((f) => (
-                            <button
-                              key={f.name}
-                              onClick={() => setFormat(f.name)}
-                              className={`py-3 px-4 rounded-xl border text-[10px] font-bold transition-all flex flex-col gap-1 ${
-                                format === f.name
-                                  ? 'border-primary-blue bg-primary-blue/10 text-white'
-                                  : 'border-dark-border bg-dark-surface/50 text-text-muted hover:border-white/20'
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 text-left">
-                                <f.icon className="w-3 h-3 flex-shrink-0" />
-                                <span>{f.name}</span>
-                              </div>
-                              <span className="text-[8px] opacity-50 font-medium text-left">{f.desc}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Length / Duration</label>
-                        <div className="flex flex-wrap gap-2">
-                          {durations.map((d) => (
-                            <button
-                              key={d}
-                              onClick={() => setDuration(d)}
-                              className={`px-4 py-2 rounded-lg border text-[10px] font-bold transition-all ${
-                                duration === d
-                                  ? 'border-primary-blue bg-primary-blue/20 text-white'
-                                  : 'border-dark-border bg-dark-surface/50 text-text-muted hover:border-white/20'
-                              }`}
-                            >
-                              {d}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                        <div className="space-y-3">
-                          <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Distribution</label>
-                          <div className="flex gap-2">
-                            {platforms.map((p) => (
-                              <button
-                                key={p.name}
-                                onClick={() => setPlatform(p.name)}
-                                className={`flex-1 py-3 rounded-xl border text-[10px] font-bold transition-all flex items-center justify-center gap-2 ${
-                                  platform === p.name
-                                    ? 'border-primary-blue bg-primary-blue/10 text-white shadow-[0_0_15px_rgba(48,49,255,0.1)]'
-                                    : 'border-dark-border bg-dark-surface/50 text-text-muted hover:border-white/20'
-                                }`}
-                              >
-                                <p.icon className="w-3 h-3" />
-                                {p.name}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <label className="text-[11px] font-bold text-white uppercase tracking-tight opacity-70">Select Style</label>
-                          <div className="grid grid-cols-2 gap-3">
-                            {styles.map((s) => (
-                              <StyleItem
-                                key={s.name}
-                                {...s}
-                                active={style === s.name}
-                                onClick={() => setStyle(s.name)}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                      <button
-                        onClick={handleInitialSubmit}
-                        className="figma-button-primary w-full text-[15px] tracking-wide mt-4"
-                      >
-                        <Sparkles className="w-5 h-5" />
-                        Generate Script
-                      </button>
-                    </div>
-                 </div>
-              </div>
-            </LandingPage>
-          ) : loading ? (
+          {loading && (
             <LoadingState
               loadingStep={loadingStep}
               loadingSteps={loadingSteps}
               platform={platform}
             />
-          ) : (
+          )}
+
+          {script && !loading && (
             <motion.div
               key="script-output"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -478,14 +399,14 @@ export default function App() {
                 <div className="grid grid-cols-2 gap-4 mt-12 mb-20">
                   <button
                     onClick={() => showToast("Cloud Sync coming soon!", "info")}
-                    className="h-16 border border-dark-border bg-dark-surface rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:border-text-muted transition-colors"
+                    className="h-14 border border-dark-border bg-dark-surface rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:border-text-muted transition-colors px-6"
                   >
-                    <Save className="w-4.5 h-4.5" />
+                    <Save className="w-4 h-4" />
                     Save Draft
                   </button>
                   <button
                     onClick={() => showToast("Auto-Video Export is in Beta.", "info")}
-                    className="h-16 bg-white text-black rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-white/90 transition-all font-bold"
+                    className="h-14 bg-white text-black rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/90 transition-all px-6"
                   >
                     Generate Video (Beta)
                   </button>
@@ -517,16 +438,17 @@ export default function App() {
               <button
                 onClick={generateScript}
                 disabled={!validateEmail(email)}
-                className="figma-button-primary w-full py-5 disabled:opacity-30 disabled:grayscale transition-all"
+                className="figma-button-primary w-full h-14 rounded-xl disabled:opacity-30 disabled:grayscale transition-all text-xs"
               >
                 Send & Generate
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
               <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest pt-4">No Spam • One-click Unsubscribe</p>
             </div>
           </div>
         </Modal>
 
+        <Footer />
         <BottomTabNav activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
     </div>
