@@ -197,7 +197,8 @@ export default function App() {
     }, 2000);
 
     try {
-      const response = await fetch('/api/generate-script', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/generate-script`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic, style, duration, platform, email })
