@@ -196,6 +196,8 @@ export default function App() {
       setLoadingStep(prev => (prev < loadingSteps.length - 1 ? prev + 1 : prev));
     }, 2000);
 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '';
       const response = await fetch(`${apiUrl}/api/generate-script`, {

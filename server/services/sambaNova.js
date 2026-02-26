@@ -93,15 +93,28 @@ INSTRUCTION: You are a Dark & Raw Creative Director. You care only about the ART
       if (jsonStart !== -1 && jsonEnd !== -1) {
         return JSON.parse(content.substring(jsonStart, jsonEnd));
       }
+      throw new Error("No valid JSON found in AI response");
     } catch (e) {
       console.error("AI returned invalid JSON structure:", content);
-      throw new Error("The story was too intense for the current parser. Please try again.");
+      throw new Error("The story was too intense for the current parser. Please try again or rephrase your topic.");
+    }
+  } catch (error) {
+    if (error.response) {
+      console.error('SambaNova API Error Context:', {
+        status: error.response.status,
+        data: error.response.data
+      });
+
+      if (error.response.status === 401 || error.response.status === 403) {
+        throw new Error('Authentication with AI Service failed. Check API Key.');
+      }
+      if (error.response.status === 429) {
+        throw new Error('AI Service rate limit reached. Please wait a moment.');
+      }
     }
 
-    return content;
-  } catch (error) {
-    console.error('SambaNova API Error:', error.response?.data || error.message);
-    throw new Error('AI Service is currently unavailable. Please try again later.');
+    console.error('SambaNova Integration Error:', error.message);
+    throw new Error(error.message || 'AI Service is currently unavailable. Please try again later.');
   }
 };
 
