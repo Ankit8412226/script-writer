@@ -29,6 +29,7 @@ import LandingPage from './components/LandingPage';
 import Modal from './components/Modal';
 import Navbar from './components/Navbar';
 import ProductionForge from './components/ProductionForge';
+import LoadingState from './components/LoadingState';
 import Toast from './components/Toast';
 
 const StyleItem = ({ name, desc, icon: Icon, active, onClick }) => (
