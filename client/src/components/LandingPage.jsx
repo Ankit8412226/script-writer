@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2, Clapperboard, Cpu, Sparkles, TrendingUp, Users, Video, Zap } from 'lucide-react';
 
 const FeatureCard = ({ icon: Icon, title, desc }) => (
-  <div className="figma-card group hover:bg-[#151930] transition-all">
-    <div className="w-12 h-12 bg-primary-blue/10 border border-primary-blue/20 rounded-xl flex items-center justify-center mb-6 text-primary-blue group-hover:scale-110 transition-transform">
+  <div className="figma-card group hover:bg-[#151930] transition-all cursor-pointer">
+    <div className="w-12 h-12 bg-primary-blue/10 border border-primary-blue/20 rounded-xl flex items-center justify-center mb-6 text-primary-blue group-hover:scale-110 group-hover:bg-primary-blue group-hover:text-white transition-all duration-300">
       <Icon className="w-6 h-6" />
     </div>
-    <h3 className="text-lg font-bold mb-3">{title}</h3>
+    <h3 className="text-lg font-bold mb-3 group-hover:text-primary-blue transition-colors">{title}</h3>
     <p className="text-sm text-text-muted leading-relaxed">{desc}</p>
   </div>
 );
@@ -39,7 +39,7 @@ const LandingPage = ({ onEnterForge }) => {
           <div className="flex flex-col sm:flex-row gap-8 items-center lg:items-start">
             <button
               onClick={onEnterForge}
-              className="bg-primary-blue text-white px-10 h-16 rounded-xl font-black text-sm uppercase tracking-widest shadow-xl shadow-primary-blue/30 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3 group"
+              className="figma-button-primary px-10 h-16 group"
             >
               <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               Enter Production Forge
@@ -155,7 +155,7 @@ const LandingPage = ({ onEnterForge }) => {
             { title: 'Brand Ads', desc: 'High-converting copy', icon: Clapperboard },
             { title: 'Storytellers', desc: 'Independent cinema', icon: Users },
           ].map((use, i) => (
-            <div key={i} className="figma-card text-center p-10 group hover:bg-[#151930] transition-all">
+            <div key={i} className="figma-card text-center p-10 group hover:bg-[#151930] transition-all cursor-pointer">
               <div className="w-14 h-14 bg-dark-bg border border-dark-border rounded-2xl flex items-center justify-center mx-auto mb-8 text-text-muted group-hover:text-primary-blue group-hover:border-primary-blue/30 group-hover:scale-110 transition-all">
                 <use.icon className="w-7 h-7" />
               </div>
@@ -300,7 +300,7 @@ const LandingPage = ({ onEnterForge }) => {
             </ul>
             <button
               onClick={onEnterForge}
-              className="w-full py-4 border border-dark-border rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-dark-border transition-colors"
+              className="w-full figma-button-outline mt-auto py-4"
             >
               Start Free
             </button>
@@ -345,7 +345,7 @@ const LandingPage = ({ onEnterForge }) => {
                 </li>
               ))}
             </ul>
-            <button className="w-full py-4 border border-dark-border rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-dark-border transition-colors">Talk to Sales</button>
+            <button className="w-full figma-button-outline mt-auto py-4">Talk to Sales</button>
           </div>
         </div>
       </section>

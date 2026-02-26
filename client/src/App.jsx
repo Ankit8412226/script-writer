@@ -34,13 +34,13 @@ import Toast from './components/Toast';
 const StyleItem = ({ name, desc, icon: Icon, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col gap-3 ${
+    className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col gap-3 group cursor-pointer ${
       active
         ? 'border-primary-blue bg-primary-blue/10 shadow-[0_0_20px_rgba(48,49,255,0.1)]'
-        : 'border-dark-border bg-dark-surface hover:border-text-muted/30'
+        : 'border-dark-border bg-dark-surface hover:border-dark-border/80'
     }`}
   >
-    <div className={`${active ? 'text-white' : 'text-text-muted'} group-hover:text-primary-blue transition-colors`}>
+    <div className={`${active ? 'text-primary-blue' : 'text-text-muted'} group-hover:text-primary-blue transition-colors`}>
       <Icon className="w-6 h-6" />
     </div>
     <div>
@@ -58,8 +58,8 @@ const HookCard = ({ visual, voiceover, onCopy }) => (
          <span className="text-[10px] font-bold text-primary-hover uppercase tracking-widest">The Hook</span>
       </div>
       <div className="flex gap-4 text-text-muted/60">
-        <button onClick={onCopy} className="hover:text-white transition-colors"><Copy className="w-3.5 h-3.5" /></button>
-        <button className="hover:text-white transition-colors"><RotateCcw className="w-3.5 h-3.5" /></button>
+        <button onClick={onCopy} className="hover:text-white transition-colors cursor-pointer p-1"><Copy className="w-3.5 h-3.5" /></button>
+        <button className="hover:text-white transition-colors cursor-pointer p-1"><RotateCcw className="w-3.5 h-3.5" /></button>
       </div>
     </div>
     <div className="p-8 space-y-6">
@@ -247,7 +247,10 @@ export default function App() {
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-        <Navbar onHome={() => setView('landing')} />
+        <Navbar
+          onHome={() => setView('landing')}
+          onEnterForge={() => setView('forge')}
+        />
 
         <div className="mt-8 mb-12 flex items-center gap-6 overflow-x-auto no-scrollbar py-2">
           <div className="flex items-center gap-2 shrink-0">
@@ -259,7 +262,7 @@ export default function App() {
               <button
                 key={topic}
                 onClick={() => setTopic(topic)}
-                className="px-4 py-2 rounded-full border border-dark-border bg-dark-surface/30 text-[10px] font-bold text-white/60 hover:border-primary-blue hover:text-white transition-all whitespace-nowrap"
+                className="px-4 py-2 rounded-full border border-dark-border bg-dark-surface/30 text-[10px] font-bold text-white/60 hover:border-primary-blue hover:text-white hover:bg-primary-blue/5 transition-all cursor-pointer whitespace-nowrap"
               >
                 {topic}
               </button>

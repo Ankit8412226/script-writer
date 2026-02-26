@@ -19,6 +19,10 @@
     @apply bg-dark-bg text-text-main antialiased selection:bg-primary-blue/30;
     font-family: 'Inter', system-ui, sans-serif;
   }
+
+  button, a, [role="button"], .cursor-pointer {
+    @apply cursor-pointer;
+  }
 }
 
 @layer components {
@@ -38,8 +42,12 @@
     @apply bg-primary-blue text-white rounded-2xl py-5 px-8 font-bold flex items-center justify-center gap-3 transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.98] shadow-[0_12px_30px_var(--color-primary-glow)];
   }
 
+  .figma-button-outline {
+    @apply bg-transparent text-white border border-dark-border rounded-xl py-2 px-6 font-bold flex items-center justify-center gap-2 transition-all hover:bg-dark-surface hover:border-text-muted active:scale-[0.98];
+  }
+
   .nav-item {
-    @apply flex flex-col items-center gap-1.5 text-[10px] uppercase font-bold text-text-muted transition-colors py-2 hover:text-white;
+    @apply flex flex-col items-center gap-1.5 text-[10px] uppercase font-bold text-text-muted transition-colors py-2 hover:text-white cursor-pointer;
   }
 
   .nav-item.active {
