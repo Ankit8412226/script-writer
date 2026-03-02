@@ -118,6 +118,7 @@ export default function App() {
   const [error, setError] = useState('');
   const [loadingStep, setLoadingStep] = useState(0);
   const [toasts, setToasts] = useState([]);
+  const [language, setLanguage] = useState('en');
 
   const showToast = (message, type = 'success') => {
     const id = Date.now();
@@ -165,6 +166,12 @@ export default function App() {
     { name: 'TikTok/Reels', icon: TrendingUp },
     { name: 'YouTube', icon: Video },
     { name: 'LinkedIn', icon: Users },
+  ];
+
+  const languages = [
+    { key: 'en', label: 'English' },
+    { key: 'hi', label: 'Hindi' },
+    { key: 'hinglish', label: 'Hinglish' },
   ];
 
   const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -226,19 +233,36 @@ export default function App() {
   const copyToClipboard = (text) => {
     let content = text;
     if (typeof text === 'object' && text !== null) {
-      content = `${text.visual || ''}\n${text.voiceover || ''}`;
+      const voiceover = typeof text.voiceover === 'object' && text.voiceover !== null
+        ? (text.voiceover[language] || text.voiceover.en || text.voiceover.hi || text.voiceover.hinglish || '')
+        : (text.voiceover || '');
+      content = `${text.visual || ''}\n${voiceover}`;
     }
     navigator.clipboard.writeText(content || JSON.stringify(script));
     showToast('Copied to clipboard!');
   };
 
+  const pickLanguage = (value) => {
+    if (!value || typeof value !== 'object') return value;
+    return value[language] || value.en || value.hi || value.hinglish || '';
+  };
+
+  const formatAllLanguages = (value) => {
+    if (!value || typeof value !== 'object') return value || '';
+    return [
+      `English: ${value.en || ''}`,
+      `Hindi: ${value.hi || ''}`,
+      `Hinglish: ${value.hinglish || ''}`,
+    ].join('\n');
+  };
+
   const copyAll = () => {
     if (!script) return;
     const hookText = typeof script.hook === 'object'
-      ? `Visual: ${script.hook.visual}\nVoiceover: ${script.hook.voiceover}`
+      ? `Visual: ${script.hook.visual}\nVoiceover:\n${formatAllLanguages(script.hook.voiceover)}`
       : `Voiceover: ${script.hook}`;
 
-    const fullText = `TOPIC: ${topic}\nSTYLE: ${style}\nPLATFORM: ${platform}\n\nHOOK:\n${hookText}\n\nSCENES:\n${script.scenes?.map((s, i) => `Scene ${i+1}:\nVisual: ${s.visual}\nVoiceover: ${s.voiceover}`).join('\n\n')}\n\nCTA: ${script.cta}`;
+    const fullText = `TOPIC: ${topic}\nSTYLE: ${style}\nPLATFORM: ${platform}\n\nHOOK:\n${hookText}\n\nSCENES:\n${script.scenes?.map((s, i) => `Scene ${i+1}:\nVisual: ${s.visual}\nVoiceover:\n${formatAllLanguages(s.voiceover)}`).join('\n\n')}\n\nCTA:\n${formatAllLanguages(script.cta)}`;
     navigator.clipboard.writeText(fullText);
     showToast('Full script copied to clipboard!');
   };
@@ -349,6 +373,22 @@ export default function App() {
                       </div>
                     </div>
 
+                   <div className="flex gap-2">
+                     {languages.map((lang) => (
+                       <button
+                         key={lang.key}
+                         onClick={() => setLanguage(lang.key)}
+                         className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                           language === lang.key
+                             ? 'bg-primary-blue text-white border-primary-blue shadow-[0_0_12px_rgba(48,49,255,0.3)]'
+                             : 'bg-dark-surface text-text-muted border-dark-border hover:text-white hover:border-text-muted'
+                         }`}
+                       >
+                         {lang.label}
+                       </button>
+                     ))}
+                   </div>
+
                    <div className="space-y-2">
                       <div className="flex justify-between items-center text-[10px] font-bold">
                         <span className="text-primary-blue flex items-center gap-2">
@@ -371,7 +411,7 @@ export default function App() {
                 <div className="space-y-8">
                   <HookCard
                     visual={script.hook?.visual || "Cinematic wide shot transitioning to a fast-paced zoom to capture attention."}
-                    voiceover={script.hook?.voiceover || script.hook}
+                    voiceover={pickLanguage(script.hook?.voiceover) || script.hook}
                     onCopy={() => copyToClipboard(script.hook)}
                   />
 
@@ -380,8 +420,8 @@ export default function App() {
                       key={idx}
                       label={`Phase 0${idx + 1}: ${idx === 0 ? 'The Pattern Interrupt' : idx === 1 ? 'High-Value Delivery' : 'Strategic Pacing'}`}
                       visual={scene.visual}
-                      voiceover={scene.voiceover}
-                      onCopy={() => copyToClipboard(`${scene.visual}\n${scene.voiceover}`)}
+                      voiceover={pickLanguage(scene.voiceover)}
+                      onCopy={() => copyToClipboard(`${scene.visual}\n${pickLanguage(scene.voiceover)}`)}
                     />
                   ))}
 
@@ -393,11 +433,11 @@ export default function App() {
                       <div className="flex justify-between items-center mb-6">
                         <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.34em]">Final Conversion</span>
                         <div className="flex gap-4 text-white/50">
-                          <button onClick={() => copyToClipboard(script.cta)} className="hover:text-white transition-colors"><Copy className="w-4 h-4" /></button>
+                          <button onClick={() => copyToClipboard(pickLanguage(script.cta))} className="hover:text-white transition-colors"><Copy className="w-4 h-4" /></button>
                           <button className="hover:text-white transition-colors"><RotateCcw className="w-4 h-4" /></button>
                         </div>
                       </div>
-                      <p className="text-2xl font-black uppercase leading-tight italic text-white">"{script.cta}"</p>
+                      <p className="text-2xl font-black uppercase leading-tight italic text-white">"{pickLanguage(script.cta)}"</p>
                     </div>
                   </div>
                 </div>

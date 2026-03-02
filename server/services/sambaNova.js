@@ -42,6 +42,7 @@ PRODUCTION SPECS:
 3. VISUAL CINEMATOGRAPHY: Describe lighting, camera movement, and on-screen action.
 4. SAFETY: Edgy is allowed (profanity, crime, violence, dark themes). Do NOT include hate or harassment, or graphic sexual content.
 5. CLARITY: Use concise, vivid language. No filler, no meta commentary.
+6. LANGUAGE: Provide voiceover + CTA in English (en), Hindi (hi, Devanagari), and Hinglish (hinglish, Latin script mixing Hindi + English). Keep meaning consistent across languages. Visuals remain in English only.
 
 LENGTH GUIDANCE:
 - Hook voiceover: 1-2 sentences.
@@ -52,16 +53,28 @@ OUTPUT FORMAT (STRICT JSON ONLY, NO MARKDOWN, NO EXTRA TEXT):
 {
   "hook": {
     "visual": "Concise visual opening.",
-    "voiceover": "Spoken opening that sets stakes immediately."
+    "voiceover": {
+      "en": "Spoken opening that sets stakes immediately in English.",
+      "hi": "हिंदी में वही अर्थ और टोन.",
+      "hinglish": "Hinglish in Latin script, mixing Hindi + English naturally."
+    }
   },
   "scenes": [
     ${Array.from({ length: sceneCount }).map((_, i) => `{
       "scene": ${i + 1},
       "visual": "Shot-by-shot description with lighting and mood cues.",
-      "voiceover": "Narrative block with dialogue and internal thoughts where useful."
+      "voiceover": {
+        "en": "Narrative block in English.",
+        "hi": "हिंदी में वही अर्थ और टोन.",
+        "hinglish": "Hinglish in Latin script, mixing Hindi + English naturally."
+      }
     }`).join(',\n    ')}
   ],
-  "cta": "A final closing line that drives action or leaves a lasting impression."
+  "cta": {
+    "en": "A final closing line that drives action or leaves a lasting impression.",
+    "hi": "हिंदी में वही अर्थ और टोन.",
+    "hinglish": "Hinglish in Latin script, mixing Hindi + English naturally."
+  }
 }
 `;
 
